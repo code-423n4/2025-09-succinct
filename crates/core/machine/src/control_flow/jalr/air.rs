@@ -4,13 +4,18 @@ use crate::{
         state::{CPUState, CPUStateInput},
     },
     air::{SP1CoreAirBuilder, SP1Operation},
-    operations::AddOperationInput,
+    operations::{
+        bitwise::{BitwiseOperation, BitwiseOperationInput},
+        u16_operation::{U16toU8OperationUnsafe, U16toU8OperationUnsafeInput},
+        AddOperationInput,
+    },
 };
 use slop_air::{Air, AirBuilder};
 use slop_algebra::{AbstractField, Field};
 use slop_matrix::Matrix;
 use sp1_core_executor::{ByteOpcode, Opcode, CLK_INC};
 use sp1_hypercube::Word;
+use sp1_primitives::consts::WORD_BYTE_SIZE;
 use std::borrow::Borrow;
 
 use crate::operations::AddOperation;
@@ -36,7 +41,7 @@ where
         let base_opcode = AB::Expr::from_canonical_u32(Opcode::JALR.base_opcode().0);
         let instr_type = AB::Expr::from_canonical_u32(Opcode::JALR.instruction_type().0 as u32);
 
-        // We constrain `next_pc` to be the sum of `op_b` and `op_c`.
+        // We constrain `unaligned_next_pc` to be the sum of `op_b` and `op_c`.
         let op_input = AddOperationInput::<AB>::new(
             local.adapter.b().map(|x| x.into()),
             local.adapter.c().map(|x| x.into()),
@@ -44,18 +49,48 @@ where
             local.is_real.into(),
         );
         <AddOperation<AB::F> as SP1Operation<AB>>::eval(builder, op_input);
+let unaligned_next_pc = local.add_operation.value;
+        builder.assert_zero(unaligned_next_pc[3]);
 
-        let next_pc = local.add_operation.value;
+        // Convert the unaligned next_pc to bytes.
+        let u16_to_u8_input = U16toU8OperationUnsafeInput {
+            u16_values: unaligned_next_pc.map(|x| x.into()),
+            cols: local.u16_to_u8_operation,
+        };
+        let unaligned_next_pc_bytes =
+            <U16toU8OperationUnsafe as SP1Operation<AB>>::lower(builder, u16_to_u8_input);
+
+        // Create the bitmask to clear the LSB. This is 0xFFFFFFFFFFFFFFFE.
+        let mask: [AB::Expr; WORD_BYTE_SIZE] = [
+            AB::Expr::from_canonical_u8(0xFE),
+            AB::Expr::from_canonical_u8(0xFF),
+            AB::Expr::from_canonical_u8(0xFF),
+            AB::Expr::from_canonical_u8(0xFF),
+            AB::Expr::from_canonical_u8(0xFF),
+            AB::Expr::from_canonical_u8(0xFF),
+            AB::Expr::from_canonical_u8(0xFF),
+            AB::Expr::from_canonical_u8(0xFF),
+        ];
+
+        // Apply the bitmask to clear the LSB.
+        let bitwise_input = BitwiseOperationInput {
+            a: unaligned_next_pc_bytes,
+            b: mask,
+            cols: local.bitwise_operation,
+            opcode: AB::Expr::from_canonical_u32(ByteOpcode::AND as u32),
+            is_real: local.is_real.into(),
+        };
+        <BitwiseOperation<AB::F> as SP1Operation<AB>>::lower(builder, bitwise_input);
+
+        // Convert the result back to a word.
+        let mut next_pc = Word(core::array::from_fn(|_| AB::Expr::zero()));
+        let base = AB::Expr::from_canonical_u32(1 << 8);
+        for i in 0..4 {
+            next_pc.0[i] = local.bitwise_operation.result[2 * i].into()
+                + local.bitwise_operation.result[2 * i + 1].into() * base.clone();
+        }
+
         builder.assert_zero(next_pc[3]);
-
-        // Check that the `next_pc` value is a multiple of 4.
-        builder.send_byte(
-            AB::Expr::from_canonical_u32(ByteOpcode::Range as u32),
-            next_pc[0].into() * AB::F::from_canonical_u32(4).inverse(),
-            AB::Expr::from_canonical_u32(14),
-            AB::Expr::zero(),
-            local.is_real,
-        );
 
         // Constrain the state of the CPU.
         // The `next_pc` is constrained by the AIR.

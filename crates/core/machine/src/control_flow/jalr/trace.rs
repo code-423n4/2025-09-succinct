@@ -75,6 +75,7 @@ impl<F: PrimeField32> MachineAir<F> for JalrChip {
     }
 }
 
+use sp1_core_executor::Opcode;
 impl JalrChip {
     /// Create a row from an event.
     fn event_to_row<F: PrimeField32>(
@@ -87,9 +88,26 @@ impl JalrChip {
         // `event.c` is unused, since we ought to use a `JalrEvent` rather than a `JumpEvent`.
         cols.is_real = F::one();
         cols.op_a_value = event.a.into();
-        let low_limb = (event.b.wrapping_add(imm) & 0xFFFF) as u16;
-        blu.add_bit_range_check(low_limb / 4, 14);
+        // Calculate the unaligned next pc.
+        let unaligned_next_pc = event.b.wrapping_add(imm);
         cols.add_operation.populate(blu, event.b, imm);
+
+        // Populate the u16 to u8 conversion.
+        cols.u16_to_u8_operation
+            .populate_u16_to_u8_unsafe(unaligned_next_pc);
+
+        // Clear the LSB of the unaligned_next_pc.
+        let aligned_next_pc = unaligned_next_pc & 0xFFFFFFFFFFFFFFFE;
+        let bitwise_mask = 0xFFFFFFFFFFFFFFFE;
+
+        // Populate the bitwise operation.
+        cols.bitwise_operation.populate_bitwise(
+            blu,
+            unaligned_next_pc,
+            bitwise_mask,
+            aligned_next_pc,
+            Opcode::AND,
+        );
         if !event.op_a_0 {
             cols.op_a_operation.populate(blu, event.pc, 4);
         }

@@ -3,8 +3,9 @@ use sp1_derive::AlignedBorrow;
 use sp1_hypercube::Word;
 use std::mem::size_of;
 
-use crate::operations::AddOperation;
-
+use crate::operations::{
+    bitwise::BitwiseOperation, u16_operation::U16toU8Operation, AddOperation,
+};
 pub const NUM_JALR_COLS: usize = size_of::<JalrColumns<u8>>();
 
 #[derive(AlignedBorrow, Default, Debug, Clone, Copy)]
@@ -27,4 +28,10 @@ pub struct JalrColumns<T> {
 
     /// Computation of `pc + 4` if `op_a != X0`.
     pub op_a_operation: AddOperation<T>,
+
+    /// Instance of `BitwiseOperation` to handle bitwise logic.
+    pub bitwise_operation: BitwiseOperation<T>,
+
+    /// Instance of `U16toU8Operation` to handle u16 to u8 conversion.
+    pub u16_to_u8_operation: U16toU8Operation<T>,
 }
