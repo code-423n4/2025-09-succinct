@@ -1,0 +1,97 @@
+==============================================================
+Guild: Code4rena
+Channel: ARCHIVE-PUBLIC / succinct-sep
+==============================================================
+
+[09/11/2025 08:17] kartoonjoy (pinned)
+👋 Hello and welcome to the $112,500 in USDC **Succinct** audit channel!
+
+📆 Audit opens 09/15/2025 20:00 (20:00 UTC) and runs through 10/15/2025 20:00 (20:00 UTC) (30 days).
+
+We'll be posting relevant links, documentation, etc. here, so if you intend to participate in this audit, consider enabling notifications for this channel. 🐺 ⏰
+
+Join the audit: <https://code4rena.com/audits/2025-09-succinct>
+
+
+[09/11/2025 08:23] kartoonjoy
+Pinned a message.
+
+
+[09/12/2025 07:24] kartoonjoy
+🚨 POC's for HM are recommended, but not required for the Succinct audit.
+
+{Reactions}
+👍 (9) 
+
+[09/15/2025 20:00] C4
+🔎 **Got audit-related questions? Here's your roadmap** 
+
+Find the information you need efficiently:
+
+1. Step 1: **Review project documentation** in the audit repo. [Join the audit](<https://code4rena.com/audits/2025-09-succinct>) for access.
+2. Step 2: Use **🤖 Docs Wolf,** C4's documentation bot assistant. Open a private thread, tag `@Docs Wolf`, and ask your question. The bot will make its best attempt to answer based on the codebase and documentation, and link you to relevant resources.
+3. Step 3: If you still need clarification after reviewing the docs, feel free to **ask the Succinct team** directly. From [the audit page](<https://code4rena.com/audits/2025-09-succinct>), join the audit and select the `Q & A` tab.
+
+To ensure sponsors can focus their time on questions that truly need their expertise, please: 
+
+- Reference what you've already checked in the docs
+- Be specific about what you need clarified
+- Use thread replies to keep discussions organized
+
+Good hunting!
+
+
+[10/15/2025 20:02] C4
+**🚨 AUDIT ALERT**
+
+@🐺Wardens The **Succinct** audit is now closed! Huge thanks to everyone who participated 🔍, whether you submitted a finding or not.
+
+What's next: The sponsor team and judge will review the findings over the next couple of weeks. Progress through the judging, awarding, and reporting phases can be tracked via [the audit page](<https://code4rena.com/audits/2025-09-succinct>).
+
+{Reactions}
+🔥 (4) ❤️ (2) 
+
+[11/07/2025 13:49] itsmetechjay
+🤑 🎉  Awards for **Succinct**:
+
+$46,847.07 USDC » @MohamedFahmy
+$18,452.21 USDC » @Matte
+$10,486.53 USDC » @ValarIsLife
+$10,486.53 USDC » @EV_om
+$5,000.28 USDC » @JohnWeb3
+$4,128.23 USDC » @Almanax
+$4,128.23 USDC » @zubyoz
+$4,128.23 USDC » @Cryptor
+$2,084.21 USDC » @Kkkk
+$1,942.70 USDC » @Niffylord
+$1,389.47 USDC » @timijcool
+$926.32 USDC » @afriauditor
+
+🏁 Findings summary
+--------------------------------------—
+1 High risk findings
+7 Med risk findings
+761 wardens participated
+
+Top Hunter: mohamedfahmy
+Top Gatherer: Matte
+Top QA report: KKKKK
+
+Awards will be distributed on Ethereum within the next week. Congratulations all!  💸 💸 💸
+
+⚠️ Awardees, be sure to [complete your tax reporting info](https://docs.code4rena.com/awarding/incentive-model-and-awards/awarding-process#tax-information-for-code4rena-contributors-wardens-judges-etc) if you haven't already. This must be completed within 30 days (i.e. before Sunday, 07 December 2025) to receive your award distribution for this audit.
+
+{Reactions}
+c4ship (9) 
+
+[01/09/2026 01:00] C4
+ℹ️ This channel is pending archive.   As a result, any private threads will be permanently deleted 01/17/2026 00:55. Please make sure to grab anything you might need before then.
+
+
+[01/15/2026 18:00] C4
+ℹ️ Reminder: this channel will be deleted after 24 hours.
+
+
+==============================================================
+Exported 8 message(s)
+==============================================================
